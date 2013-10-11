@@ -27,20 +27,19 @@ std::string exec(std::string command)
 }
 
 // Given a delimited string, parse the strings into a string array
-void parsePaths(std::string input, std::string * pathList)
+void parsePaths(std::string input, std::string * pathList, int & pathIndex)
 {
-	int index = 0;
 	std::string delimiter = ":";
 	size_t pos = 0;
 	// Loop through input and insert delimited values into pathList
 	while ((pos = input.find(delimiter)) != std::string::npos)
 	{
-		pathList[index] = input.substr(0, pos);
+		pathList[pathIndex] = input.substr(0, pos);
 		input.erase(0, pos + delimiter.length());
-		index++;
+		pathIndex++;
 	}
 	// Get the final delimited value
-	pathList[index] = input;
+	pathList[pathIndex] = input;
 }
 
 // Main method
@@ -48,12 +47,13 @@ int main ()
 {
 	// Array to hold system paths
 	std::string pathList [16];
+	int pathIndex = 0;
 	// Result of $Path (colon delimited string)
 	std::string paths = exec("echo \"$PATH\"");
 	// Parse delimited string into pathList array
-	parsePaths(paths, pathList);
+	parsePaths(paths, pathList, pathIndex);
 	// Loop through pathList
-	for (unsigned int i=0; i < 16; i++)
+	for (int i=0; i <= pathIndex; i++)
 	{
 		// Print path
 		std::cout << pathList[i] << std::endl;
